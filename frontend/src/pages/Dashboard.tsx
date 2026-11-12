@@ -1,8 +1,8 @@
 ﻿import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link, Outlet } from 'react-router-dom';
 
-export default function Dashboard() {
+export default function Layout() {
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -12,19 +12,29 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
-          <button onClick={handleLogout} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors">
-            Logout
-          </button>
+    <div className="min-h-screen bg-gray-50">
+      {/* Navigation Bar */}
+      <nav className="bg-white shadow-sm border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-16">
+            <div className="flex items-center space-x-8">
+              <Link to="/dashboard" className="text-2xl font-bold text-blue-600">AlgorithmX</Link>
+              <Link to="/dashboard" className="text-gray-600 hover:text-blue-600 font-medium">Dashboard</Link>
+              <Link to="/problems" className="text-gray-600 hover:text-blue-600 font-medium">Problems</Link>
+            </div>
+            <div className="flex items-center">
+              <button onClick={handleLogout} className="bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2 rounded-md font-medium transition-colors">
+                Logout
+              </button>
+            </div>
+          </div>
         </div>
-        <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-xl font-semibold text-green-600 mb-2">You are logged in!</h2>
-          <p className="text-gray-600">This is where the problems and contests will be listed.</p>
-        </div>
-      </div>
+      </nav>
+
+      {/* Main Content Area */}
+      <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <Outlet />
+      </main>
     </div>
   );
 }

@@ -3,9 +3,11 @@ import { AuthProvider, AuthContext } from './context/AuthContext';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import DashboardIndex from './pages/DashboardIndex';
+import Problems from './pages/Problems';
+import ProblemDetail from './pages/ProblemDetail';
 import { useContext } from 'react';
 
-// Protected Route Wrapper
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const auth = useContext(AuthContext);
   return auth?.isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
@@ -18,15 +20,13 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route 
-            path="/dashboard" 
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } 
-          />
-          {/* Default route redirects to dashboard (which forces login if not authenticated) */}
+          
+          <Route element={<ProtectedRoute><Dashboard /></ProtectedRoute>}>
+            <Route path="/dashboard" element={<DashboardIndex />} />
+            <Route path="/problems" element={<Problems />} />
+            <Route path="/problems/:id" element={<ProblemDetail />} />
+          </Route>
+
           <Route path="*" element={<Navigate to="/dashboard" />} />
         </Routes>
       </BrowserRouter>
