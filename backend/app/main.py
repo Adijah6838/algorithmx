@@ -1,6 +1,6 @@
 ﻿from fastapi import FastAPI
 from app.core.config import settings
-from app.api.routes import auth
+from app.api.routes import auth, problems
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -8,8 +8,8 @@ app = FastAPI(
     description="Backend API for the AlgorithmX competitive programming platform"
 )
 
-# Include Routers
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
+app.include_router(problems.router, prefix="/api/problems", tags=["Problems"])
 
 @app.get("/")
 def read_root():

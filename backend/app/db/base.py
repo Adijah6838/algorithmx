@@ -1,2 +1,3 @@
 ﻿from app.db.database import Base
-from app.models.user import User, Role  # Import all models here
+from app.models.user import User, Role
+from app.models.problem import Problem, TestCase
