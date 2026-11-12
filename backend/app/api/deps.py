@@ -31,7 +31,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     return user
 
 def get_current_admin_or_moderator(current_user: User = Depends(get_current_user)) -> User:
-    if current_user.role.name not in ["Admin", "Moderator"]:
+    if not current_user.role or current_user.role.name not in ["Admin", "Moderator"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Not enough permissions"
