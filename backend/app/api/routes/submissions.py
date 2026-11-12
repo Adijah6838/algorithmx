@@ -13,35 +13,25 @@ from app.services.evaluator import evaluate_submission
 router = APIRouter()
 
 @router.post("/", response_model=SubmissionResponse, status_code=status.HTTP_201_CREATED)
-def submit_code(
-    submission_in: SubmissionCreate,
-    background_tasks: BackgroundTasks,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
-    # Verify problem exists
+def submit_code(submission_in: SubmissionCreate, background_tasks: BackgroundTasks, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     problem = db.query(Problem).filter(Problem.id == submission_in.problem_id).first()
     if not problem:
         raise HTTPException(status_code=404, detail="Problem not found")
 
-    new_submission = Submission(
-        user_id=current_user.id,
-        problem_id=submission_in.problem_id,
-        language=submission_in.language,
-        code=submission_in.code
-    )
+    new_submission = Submission(user_id=current_user.id, problem_id=submission_in.problem_id, language=submission_in.language, code=submission_in.code)
     db.add(new_submission)
     db.commit()
     db.refresh(new_submission)
-
-    # Trigger background evaluation
     background_tasks.add_task(evaluate_submission, new_submission.id, db)
-
     return new_submission
 
 @router.get("/", response_model=List[SubmissionResponse])
-def get_my_submissions(
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
+def get_my_submissions(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     return db.query(Submission).filter(Submission.user_id == current_user.id).order_by(Submission.created_at.desc()).all()
+
+@router.get("/{submission_id}", response_model=SubmissionResponse)
+def get_submission(submission_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    submission = db.query(Submission).filter(Submission.id == submission_id, Submission.user_id == current_user.id).first()
+    if not submission:
+        raise HTTPException(status_code=404, detail="Submission not found")
+    return submission

@@ -6,6 +6,7 @@ import Dashboard from './pages/Dashboard';
 import DashboardIndex from './pages/DashboardIndex';
 import Problems from './pages/Problems';
 import ProblemDetail from './pages/ProblemDetail';
+import Analytics from './pages/Analytics';
 import { useContext } from 'react';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -25,6 +26,7 @@ function App() {
             <Route path="/dashboard" element={<DashboardIndex />} />
             <Route path="/problems" element={<Problems />} />
             <Route path="/problems/:id" element={<ProblemDetail />} />
+            <Route path="/analytics" element={<Analytics />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/dashboard" />} />
