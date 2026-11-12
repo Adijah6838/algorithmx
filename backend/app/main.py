@@ -1,6 +1,6 @@
 ﻿from fastapi import FastAPI
 from app.core.config import settings
-from app.api.routes import auth, problems, submissions, contests
+from app.api.routes import auth, problems, submissions, contests, analytics, leaderboard
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -12,6 +12,8 @@ app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(problems.router, prefix="/api/problems", tags=["Problems"])
 app.include_router(submissions.router, prefix="/api/submissions", tags=["Submissions"])
 app.include_router(contests.router, prefix="/api/contests", tags=["Contests"])
+app.include_router(analytics.router, prefix="/api/analytics", tags=["Analytics"])
+app.include_router(leaderboard.router, prefix="/api/leaderboard", tags=["Leaderboard"])
 
 @app.get("/")
 def read_root():
